@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 void printOddOrEven(int number)
 {
@@ -37,10 +38,14 @@ int main(int argc, char *argv[])
 
 	// Get the first argument
 	std::string argumentAsString = argv[1];
-
-	int number = std::stoi(argumentAsString);
-
-	printOddOrEven(number);
+	std::istringstream stream = std::istringstream(argumentAsString);
+	int number;
+	if (stream >> number) {
+		printOddOrEven(number);
+	}
+	else {
+		printf("NAN\n");
+	}
 
 	return 0;
 }
