@@ -64,6 +64,7 @@ int main()
 	Book book1;
 	Book book2;
 	Book book3;
+	Book book4;
 	Author author;
 
 	// Load the data into books
@@ -91,9 +92,16 @@ int main()
 	author.setName("Anna Rosling Ronnlund");
 	book3.addAuthor(author);
 
+	book4.id = 4;
+	book4.numAuthors = 0;
+	setBookName(book4, "Clean Architecture: A Craftsman's Guide to Software Structure and Design");
+	author.setName("Robert C. Martin");
+	book4.addAuthor(author);
+
 	// Display the books
 	book1.print();
 	book2.print();
 	book3.print();
+	book4.print();
 	return 0;
 }
