@@ -3,7 +3,7 @@
 
 // Define the maximum length for the name to use.
 // Specify the length of characters in the content (Excluding the terminator).
-#define MAX_NAME_LEN 10
+#define MAX_NAME_LEN 30
 #define MAX_TITLE_LEN 50
 
 struct Author
@@ -77,7 +77,7 @@ int main()
 
 	book3.id = 3;
 	book3.numAuthors = 0;
-	setBookName(book3, "Factfulness");
+	setBookName(book3, "Clean Architecture: A Craftsman's Guide to Software Structure and Design");
 	author.setName("Hans Rosling");
 	book3.addAuthor(author);
 
