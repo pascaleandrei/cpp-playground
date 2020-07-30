@@ -1,3 +1,12 @@
-﻿int main() {
+﻿#include <iostream>
+
+int main(int argc, char* argv[]) {
+	if (argc <= 1) {
+		std::cout << "No program arguments found." << std::endl;
+		return 1;
+	}
+	for (int index = 1; index < argc; ++index) {
+		std::cout << argv[index] << std::endl;
+	}
 	return 0;
 }
