@@ -1,10 +1,17 @@
 #include <iostream>
+#include <sstream>
+#include <cmath>
+
+#define CUBE 3
 
 bool isArmstrongNumber(int number)
 {
-	// TODO: implement some functionality to see if this number is an armstrong number
-
-	return false;
+	int temp = number, sum = 0;
+	while (temp > 0) {
+		sum += std::pow(temp % 10, CUBE);
+		temp /= 10;
+	}
+	return number == sum;
 }
 
 void printIsArmstrong(int number)
@@ -51,8 +58,14 @@ int main(int argc, char *argv[])
 	// Get the first argument
 	std::string argumentAsString = argv[1];
 	
-	// TODO: read number / cast to integer
+	std::istringstream stream = std::istringstream(argumentAsString);
 
-	printIsArmstrong(readNumber);
+	if (stream >> readNumber) {
+		printIsArmstrong(readNumber);
+	}
+	else {
+		printf("NAN\n");
+	}
+
 	return 0;
 }
