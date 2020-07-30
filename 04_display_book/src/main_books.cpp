@@ -5,6 +5,7 @@
 // Specify the length of characters in the content (Excluding the terminator).
 #define MAX_NAME_LEN 30
 #define MAX_TITLE_LEN 50
+#define MAX_AUTHORS_ARRAY_SIZE 5
 
 struct Author
 {
@@ -29,12 +30,14 @@ struct Book
 	char title[MAX_TITLE_LEN + 1];
 
 	int numAuthors;
-	Author authors[5];
+	Author authors[MAX_AUTHORS_ARRAY_SIZE];
 
 	void addAuthor(Author author)
 	{
-		// TODO: add an author to the container authors array.
-		numAuthors++;
+		if (numAuthors == MAX_AUTHORS_ARRAY_SIZE) {
+			return;
+		}
+		authors[numAuthors++] = author;
 	}
 
 	void print()
@@ -42,9 +45,10 @@ struct Book
 		std::cout << "Book #" << id << std::endl;
 		std::cout << "------" << std::endl;
 		std::cout << this->title << std::endl;
-
-		// TODO: add all authors
-
+		std::cout << "Authors:" << std::endl;
+		for (int index = 0; index < numAuthors; ++index) {
+			std::cout << authors[index].name << std::endl;
+		}
 	}
 };
 
