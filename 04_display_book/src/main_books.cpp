@@ -12,7 +12,7 @@ struct Author
 
 	void setName(char nameToSet[MAX_NAME_LEN])
 	{
-		strncpy(name, nameToSet, MAX_NAME_LEN);
+		strncpy_s(name, MAX_NAME_LEN + 1, nameToSet, MAX_NAME_LEN);
 		// overwrite the last character
 		name[MAX_NAME_LEN] = 0;
 	}
@@ -26,7 +26,7 @@ struct Author
 struct Book
 {
 	int id;
-	char title[50];
+	char title[MAX_TITLE_LEN + 1];
 
 	int numAuthors;
 	Author authors[5];
@@ -50,7 +50,7 @@ struct Book
 
 void setBookName(Book& book, std::string name)
 {
-	strncpy(book.title, name.c_str(), MAX_TITLE_LEN);
+	strncpy_s(book.title, MAX_TITLE_LEN + 1, name.c_str(), MAX_TITLE_LEN);
 	// overwrite the last character
 	book.title[MAX_TITLE_LEN] = 0;
 }
@@ -77,7 +77,7 @@ int main()
 
 	book3.id = 3;
 	book3.numAuthors = 0;
-	setBookName(book3, "Clean Architecture: A Craftsman's Guide to Software Structure and Design");
+	setBookName(book3, "Factfulness");
 	author.setName("Hans Rosling");
 	book3.addAuthor(author);
 
