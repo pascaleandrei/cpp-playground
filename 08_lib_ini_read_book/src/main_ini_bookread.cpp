@@ -46,19 +46,23 @@ public:
 std::vector<Book> readBooksFromIniFile(const std::string& file_name)
 {
 	std::vector<Book> results;
-	// TODO: BEGIN read the file -------------------------------------
-	
-	// E.g. Book myBook;
-	//		// build the section name (E.g. book.1)
-	//		std::stringstream ss;
-	//		ss << "book." << (i + 1);
-	//		// Copy the stream to a string you can use
-	//		std::string section_name(ss.str());
-
-	//		...
-	//		results.emplace_back(myBook);
-
-	// TODO: END read file and add to results vector ------------------
+	Book book;
+	CSimpleIniA ini;
+	std::stringstream ss;
+	std::string section_name;
+	const char* sectionCharArray;
+	ini.LoadFile(file_name.c_str());
+	int count = std::stoi(ini.GetValue("books", "count"));
+	for (int index = 0; index < count; ++index) {
+		ss.str(std::string());
+		ss.clear();
+		ss << "book." << (index + 1);
+		section_name = ss.str();
+		sectionCharArray = section_name.c_str();
+		book.name = ini.GetValue(sectionCharArray, "name");
+		book.authors = ini.GetValue(sectionCharArray, "author");
+		results.emplace_back(book);
+	}
 	return results;
 }
 
