@@ -1,4 +1,5 @@
 ﻿#include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -34,14 +35,15 @@ public:
 std::vector<Book> readBooksFromTextFile(const std::string& file_name)
 {
 	std::vector<Book> results;
-	// TODO: BEGIN read the file -------------------------------------
-
-
-	// E.g. Book myBook;
-	//		...
-	//		results.emplace_back(myBook);
-
-	// TODO: END read file and add to results vector ------------------
+	Book book;
+	std::string name, authors;
+	std::ifstream fileStream(file_name);
+	while (std::getline(fileStream, name) && std::getline(fileStream, authors)) {
+		book.name = name;
+		book.authors = authors;
+		results.emplace_back(book);
+	}
+	fileStream.close();
 	return results;
 }
 
