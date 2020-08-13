@@ -35,10 +35,10 @@ void SfmlApp::drawBlinker(int x, int y) {
 	setCell(x + 2, y, 1);
 }
 
-void SfmlApp::init()
+void SfmlApp::init(std::tuple<int, int, int> livingCellColor, std::tuple<int, int, int> deadCellColor)
 {
-	this->living_cell_color_ = sf::Color(40, 160, 20);
-	this->dead_cell_color_ = sf::Color(25, 23, 21);
+	this->living_cell_color_ = sf::Color(std::get<0>(livingCellColor), std::get<1>(livingCellColor), std::get<2>(livingCellColor));
+	this->dead_cell_color_ = sf::Color(std::get<0>(deadCellColor), std::get<1>(deadCellColor), std::get<2>(deadCellColor));
 
 	if (font_.loadFromFile("../../data/OpenSans-Regular.ttf"))
 	{
@@ -88,13 +88,11 @@ void SfmlApp::init()
 	drawBlinker(COORD, COORD);
 }
 
-void SfmlApp::run()
+void SfmlApp::run(unsigned duration_in_millis_between_updates, unsigned ticks)
 {
 	unsigned time_elapsed_since_update = 0;
 	bool simulation_active(true);
-	// TODO: it would be nice to make this configurable in the future.
-	unsigned duration_in_millis_between_updates = 1000;
-	unsigned ticks = 100, count = 0;
+	unsigned count = 0;
 
 	// run the program as long as the window is open
 	while (window_.isOpen() && count < ticks)

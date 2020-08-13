@@ -39,8 +39,8 @@ public:
 
 	~SfmlApp();
 
-	void init();
-	void run();
+	void init(std::tuple<int, int, int> livingCellColor, std::tuple<int, int, int> deadCellColor);
+	void run(unsigned duration_in_millis_between_updates, unsigned ticks);
 	void render();
 
 	void addVertexQuad(unsigned cell_x, unsigned cell_y, unsigned width, unsigned height);

@@ -16,6 +16,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 # specify the folder(s) where the compiler should look for include files
 include_directories(include) #in our case the 'include' folder present in the root folder
+include_directories(include
+                    ../thirdparty/simpleini
+)
 
 # or we can use file(GLOB ...) for wildcard additon (add any file ending with '.h')
 file(GLOB HEADER_FILES "include/*.h")
