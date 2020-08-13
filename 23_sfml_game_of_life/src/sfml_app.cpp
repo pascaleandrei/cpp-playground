@@ -26,6 +26,15 @@ std::string getMessageForActiveStatus(bool active)
 	return "Simulation is PAUSED. Press <SPACE> to toggle the simulation. Press <ESC> to exit.";
 }
 
+void SfmlApp::drawBlinker(int x, int y) {
+	if (x >= world_size_.first - 2) {
+		return;
+	}
+	setCell(x, y, 1);
+	setCell(x + 1, y, 1);
+	setCell(x + 2, y, 1);
+}
+
 void SfmlApp::init()
 {
 	this->living_cell_color_ = sf::Color(40, 160, 20);
@@ -65,6 +74,18 @@ void SfmlApp::init()
 			this->addVertexQuad(cell_x, cell_y, cell_size_.first, cell_size_.second);
 		}
 	}
+
+	matrix = new int* [world_size_.second];
+	for (int index1 = 0; index1 < world_size_.second; ++index1) {
+		matrix[index1] = new int[world_size_.first];
+		for (int index2 = 0; index2 < world_size_.first; ++index2) {
+			matrix[index1][index2] = 0;
+		}
+	}
+
+	//Draw a blinker
+	const int COORD = 20;
+	drawBlinker(COORD, COORD);
 }
 
 void SfmlApp::run()
@@ -73,9 +94,10 @@ void SfmlApp::run()
 	bool simulation_active(true);
 	// TODO: it would be nice to make this configurable in the future.
 	unsigned duration_in_millis_between_updates = 1000;
+	unsigned ticks = 100, count = 0;
 
 	// run the program as long as the window is open
-	while (window_.isOpen())
+	while (window_.isOpen() && count < ticks)
 	{
 		// check all the window's events that were triggered since the last iteration of the loop
 		sf::Event event;
@@ -118,8 +140,7 @@ void SfmlApp::run()
 					unsigned clicked_cell_x = event.mouseButton.x * view_width / (cell_size_.first * win_width);
 					unsigned clicked_cell_y = event.mouseButton.y * view_height / (cell_size_.second * win_height);
 
-					// TODO: maybe update a world matrix?
-					setCellColor(clicked_cell_x, clicked_cell_y, living_cell_color_);
+					setCell(clicked_cell_x, clicked_cell_y, !matrix[clicked_cell_y][clicked_cell_x]);
 				}
 			}
 		}
@@ -128,6 +149,7 @@ void SfmlApp::run()
 		{
 			updateWorld();
 			time_elapsed_since_update -= duration_in_millis_between_updates;
+			count++;
 		}
 
 		// clear the window with black color
@@ -155,10 +177,17 @@ void SfmlApp::setCellColor(unsigned cell_x, unsigned cell_y, sf::Color color)
 		return;
 	}
 
+	cell_vertices_[index].color = color;
+
 	for (int i = 0; i < 4; i++)
 	{
 		cell_vertices_[index + i].color = color;
 	}
+}
+
+void SfmlApp::setCell(unsigned cell_x, unsigned cell_y, int newValue) {
+	matrix[cell_y][cell_x] = newValue;
+	setCellColor(cell_x, cell_y, newValue == 1 ? living_cell_color_ : dead_cell_color_);
 }
 
 void SfmlApp::addVertexQuad(unsigned cell_x, unsigned cell_y, unsigned width, unsigned height)
@@ -196,9 +225,56 @@ void SfmlApp::render()
 	window_.draw(gui_text_);
 }
 
+int SfmlApp::getNeighboursCount(int x, int y) {
+	int count = 0;
+	if (x > 0) {
+		if (y > 0) {
+			count += matrix[y - 1][x - 1];
+		}
+		count += matrix[y][x - 1];
+		if (y < world_size_.second - 1) {
+			count += matrix[y + 1][x - 1];
+		}
+	}
+	if (x < world_size_.first - 1) {
+		if (y > 0) {
+			count += matrix[y - 1][x + 1];
+		}
+		count += matrix[y][x + 1];
+		if (y < world_size_.second - 1) {
+			count += matrix[y + 1][x + 1];
+		}
+	}
+	if (y > 0) {
+		count += matrix[y - 1][x];
+	}
+	if (y < world_size_.second - 1) {
+		count += matrix[y + 1][x];
+	}
+	return count;
+}
+
 void SfmlApp::updateWorld()
 {
-	// TODO: feel free to add function arguments as deemed necessary.
-
-	setCellColor(rand() % world_size_.first, rand() % world_size_.second, living_cell_color_);
+	int** temp, newValue;
+	temp = new int* [world_size_.second];
+	for (int index1 = 0; index1 < world_size_.second; ++index1) {
+		temp[index1] = new int[world_size_.first];
+		for (int index2 = 0; index2 < world_size_.first; ++index2) {
+			temp[index1][index2] = getNeighboursCount(index2, index1);
+		}
+	}
+	for (int index1 = 0; index1 < world_size_.second; ++index1) {
+		for (int index2 = 0; index2 < world_size_.first; ++index2) {
+			if (matrix[index1][index2] == 1) {
+				newValue = temp[index1][index2] >= INFERIOR_LIMIT && temp[index1][index2] <= SUPERIOR_LIMIT;
+			}
+			else {
+				newValue = temp[index1][index2] == SUPERIOR_LIMIT;
+			}
+			setCell(index2, index1, newValue);
+		}
+		delete[] temp[index1];
+	}
+	delete[] temp;
 }

@@ -1,4 +1,3 @@
-
 #include "SFML/Graphics.hpp"
 
 #include "sfml_app.h"
